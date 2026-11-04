@@ -1,0 +1,22 @@
+{
+  "name": "fiu-lost-and-found",
+  "version": "1.0.0",
+  "description": "FIU lost & found: database (#996) and ownership claim (#997)",
+  "main": "server.js",
+  "scripts": {
+    "test": "node --test test.js",
+    "start": "node server.js",
+    "seed": "node seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.3.0",
+    "multer": "^2.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

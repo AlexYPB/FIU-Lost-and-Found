@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- PLACEHOLDER front page so the claim flow can be demoed.
+     Replace this file with the real front page from #934 / #936. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIU Lost &amp; Found</title>
+<style>
+  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f5f6f8; color:#1c2333; }
+  header { background:#081E3F; color:#fff; padding:14px 16px; border-bottom:4px solid #B6862C; font-weight:700; }
+  main { max-width:720px; margin:24px auto; padding:0 16px; }
+  .item { background:#fff; border-radius:12px; padding:16px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,.08);
+          display:flex; gap:14px; align-items:center; }
+  .item img { width:80px; height:80px; object-fit:cover; border-radius:8px; flex:none; }
+  .item h2 { margin:0 0 4px; font-size:1.1rem; }
+  .item p { margin:0; color:#5b6475; font-size:.92rem; }
+  .item a { margin-left:auto; background:#B6862C; color:#111; padding:8px 14px; border-radius:8px; text-decoration:none; font-weight:700; flex:none; }
+</style>
+</head>
+<body>
+<header>FIU Lost &amp; Found</header>
+<main id="list"><p>Loading…</p></main>
+<script>
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+fetch('/api/items').then(r => r.json()).then(items => {
+  document.getElementById('list').innerHTML = items.length ? items.map(i => `
+    <div class="item">
+      ${i.photo_path ? `<img src="${esc(i.photo_path)}" alt="">` : ''}
+      <div><h2>${esc(i.title)}</h2><p>${esc(i.description)}</p></div>
+      <a href="/claim.html?id=${encodeURIComponent(i.id)}">Claim</a>
+    </div>`).join('') : '<p>No items posted yet.</p>';
+}).catch(() => { document.getElementById('list').innerHTML = '<p>Could not load items.</p>'; });
+</script>
+</body>
+</html>

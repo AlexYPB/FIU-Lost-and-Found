@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claim an Item · FIU Lost &amp; Found</title>
+<style>
+  :root { --blue:#081E3F; --gold:#B6862C; --bg:#f5f6f8; --card:#fff; --text:#1c2333; --muted:#5b6475;
+          --ok:#1f7a3f; --err:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--text); }
+  header { background:var(--blue); color:#fff; padding:14px 16px; border-bottom:4px solid var(--gold); }
+  header a { color:#fff; text-decoration:none; font-weight:700; }
+  main { max-width:560px; margin:24px auto; padding:0 16px; }
+  .card { background:var(--card); border-radius:12px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .item img { width:100%; max-height:260px; object-fit:cover; border-radius:8px; margin-bottom:12px; }
+  .item h1 { margin:0 0 6px; font-size:1.4rem; }
+  .muted { color:var(--muted); font-size:.92rem; }
+  .question { margin:18px 0 6px; padding:12px; background:#fdf6e8; border-left:4px solid var(--gold); border-radius:6px; font-weight:600; }
+  label { display:block; font-weight:600; margin:14px 0 4px; }
+  input { width:100%; padding:10px 12px; border:1px solid #c9ced8; border-radius:8px; font-size:1rem; }
+  button { margin-top:18px; width:100%; padding:12px; background:var(--gold); color:#111; border:0; border-radius:8px;
+           font-size:1rem; font-weight:700; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:default; }
+  .msg { margin-top:14px; padding:12px; border-radius:8px; display:none; }
+  .msg.ok { display:block; background:#e6f4ea; color:var(--ok); }
+  .msg.err { display:block; background:#fce8e6; color:var(--err); }
+</style>
+</head>
+<body>
+<header><a href="/">FIU Lost &amp; Found</a></header>
+<main>
+  <div class="card" id="card"><p class="muted">Loading item…</p></div>
+</main>
+<script>
+const id = new URLSearchParams(location.search).get('id');
+const card = document.getElementById('card');
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function load() {
+  if (!id) { card.innerHTML = '<p>No item selected. <a href="/">Browse items</a>.</p>'; return; }
+  const res = await fetch(`/api/items/${encodeURIComponent(id)}`);
+  if (!res.ok) { card.innerHTML = '<p>Item not found. <a href="/">Browse items</a>.</p>'; return; }
+  const item = await res.json();
+  card.innerHTML = `
+    <div class="item">
+      ${item.photo_path ? `<img src="${esc(item.photo_path)}" alt="Photo of ${esc(item.title)}">` : ''}
+      <h1>${esc(item.title)}</h1>
+      <p>${esc(item.description)}</p>
+      <p class="muted">${item.location_found ? 'Found at ' + esc(item.location_found) + ' · ' : ''}Posted ${esc(item.created_at.slice(0,10))}</p>
+    </div>
+    ${item.status === 'claimed'
+      ? '<div class="msg err">This item has already been claimed.</div>'
+      : `<form id="claim">
+           <div class="question">Verification question: ${esc(item.verification_question)}</div>
+           <label for="answer">Your answer</label>
+           <input id="answer" name="answer" required autocomplete="off">
+           <label for="name">Your name</label>
+           <input id="name" name="name" required>
+           <label for="email">FIU email</label>
+           <input id="email" name="email" type="email" required placeholder="you@fiu.edu">
+           <button type="submit">Submit claim</button>
+           <div class="msg" id="msg" role="status"></div>
+         </form>`}`;
+  const form = document.getElementById('claim');
+  if (form) form.addEventListener('submit', submit);
+}
+
+async function submit(e) {
+  e.preventDefault();
+  const form = e.target, btn = form.querySelector('button'), msg = document.getElementById('msg');
+  btn.disabled = true;
+  const body = Object.fromEntries(new FormData(form));
+  let res, data;
+  try {
+    res = await fetch(`/api/items/${encodeURIComponent(id)}/claim`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+    data = await res.json();
+  } catch {
+    msg.className = 'msg err';
+    msg.textContent = 'Could not reach the server. Please try again.';
+    btn.disabled = false;
+    return;
+  }
+  if (data.success) {
+    msg.className = 'msg ok';
+    msg.innerHTML = `${esc(data.message)}<br>Finder's contact: <strong>${esc(data.contact)}</strong>`;
+    form.querySelectorAll('input').forEach(i => i.disabled = true);
+    return;
+  }
+  msg.className = 'msg err';
+  msg.textContent = data.error + (data.attemptsLeft > 0 ? ` (${data.attemptsLeft} attempt${data.attemptsLeft === 1 ? '' : 's'} left)` : '');
+  btn.disabled = data.attemptsLeft === 0 || res.status === 409;
+}
+load();
+</script>
+</body>
+</html>
