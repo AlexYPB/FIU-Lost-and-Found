@@ -3,7 +3,7 @@
 Christian Armas Rodriguez's part of Sprint A. Node.js + Express + SQLite.
 
 ## Run it
-Requires Node.js 18 or newer.
+Requires Node.js 22 or newer (the locked better-sqlite3 13 dependency requires it).
 ```
 npm install
 npm run seed     # optional: 3 sample items
@@ -44,10 +44,27 @@ Photos: images only (jpg/png/gif/webp), 5 MB max, served from `/uploads/...`. Th
 (not just the name), and the saved extension is set by the server, so uploads can't be turned into web pages.
 Rejected posts don't leave files behind.
 To link the front page to the claim form: `<a href="/claim.html?id=ITEM_ID">Claim</a>`.
-`public/index.html` is a **placeholder** front page so the claim flow can be demoed; replace it with the
-real front page from #934/#936. Static frontend files go in `public/`.
+`public/index.html` implements the #934/#936 homepage, with styles in `public/styles.css` and
+API-backed listing/search in `public/app.js`. Static frontend files go in `public/`.
 
 ## Validation
 - Answers must contain at least one letter or number (stops "!!!" answers that anyone could match)
 - Missing/bad request bodies get a 400 with a message, never a server crash
 - Search treats `%` and `_` as normal characters
+
+## #934 / #936 — Homepage (Alexis)
+- Responsive navy/gold layout, item cards, dates, locations, and missing/broken-photo placeholders.
+- Fetches open items from the existing API; debounced search uses `?q=` and ignores stale responses.
+- Loading, empty, no-match, and failure states, with retry and clear-search actions.
+- Claim links use `/claim.html?id=ITEM_ID`; returning to the homepage refreshes availability.
+- User text is rendered with `textContent`; photos are limited to local upload paths.
+- Eduardo's posting page is not included yet. The disabled “Post an item” action is an integration
+  point in `public/index.html`; replace it with the actual page link when his work arrives.
+
+Additional dependency-free homepage checks: `node --test frontend.test.js`.
+These check rendering/search/state behavior using a small DOM test double; they do not replace
+visual browser checks. Run `npm test` for Christian's existing API/database/claim tests.
+
+Manual browser review: at desktop and mobile widths, check the seeded cards and photo fallbacks,
+search for “backpack”, clear the search, follow a Claim link, and return after claiming an item.
+The claimed item should disappear. Check the browser console for errors and test retry offline.
