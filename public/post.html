@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Post a Found Item · FIU Lost &amp; Found</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/post.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+  <div class="container navigation">
+    <a class="brand" href="/" aria-label="FIU Lost and Found home">
+      <span class="brand-mark">FIU</span>
+      <span>Lost &amp; Found<span class="brand-caption">A Panther Community Project</span>
+      </span></a>
+      
+    <nav aria-label="Main navigation">
+      <a class="nav-link" href="/">Browse items</a>
+      <a class="post-button" href="/post.html" aria-current="page">Post an item</a>
+    </nav>
+  </div>
+</header>
+  <main class="container">
+    <h1>Post a found item</h1>
+    <form id = "post-form">
+        <label for = "title">Item title</label>
+        <input id = "title" name = "title" type = "text" maxlength = "100" required>
+
+        <div>
+        <label for="description">Description</label>
+        <textarea id = "description" name = "description" rows = "4" type = "text" maxlength = "500" required></textarea>
+</div>
+
+    <div>
+        <label for="location_found">(Optional) Where did you find it?</label>
+        <input id = "location_found" name = "location_found" type = "text" maxlength = "200">
+</div>
+
+    <div>
+        <label for = "verification_question">Verification question</label>
+        <input id = "verification_question" name = "verification_question" type = "text" placeholder = "So we know it's really you" maxlength = "200" required>
+</div>
+
+    <div>
+        <label for = "verification_answer">Answer to your question</label>
+        <input id = "verification_answer" name = "verification_answer" type = "text" maxlength = "200" required autocomplete = "off">
+</div>
+
+<div>
+<label for="poster_email">Your email</label>
+<input id="poster_email" name="poster_email" type="email" maxlength="200" required autocomplete="email">
+</div>
+
+<div>
+  <label for="photo">Photo (optional)</label>
+  <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/gif,image/webp">
+</div>
+
+        <button id = "submit-button" type = "submit">Post item</button>
+        </form>  </main>
+</body>
+</html>
