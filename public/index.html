@@ -1,36 +1,114 @@
+
 <!doctype html>
-<!-- PLACEHOLDER front page so the claim flow can be demoed.
-     Replace this file with the real front page from #934 / #936. -->
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FIU Lost &amp; Found</title>
-<style>
-  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f5f6f8; color:#1c2333; }
-  header { background:#081E3F; color:#fff; padding:14px 16px; border-bottom:4px solid #B6862C; font-weight:700; }
-  main { max-width:720px; margin:24px auto; padding:0 16px; }
-  .item { background:#fff; border-radius:12px; padding:16px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,.08);
-          display:flex; gap:14px; align-items:center; }
-  .item img { width:80px; height:80px; object-fit:cover; border-radius:8px; flex:none; }
-  .item h2 { margin:0 0 4px; font-size:1.1rem; }
-  .item p { margin:0; color:#5b6475; font-size:.92rem; }
-  .item a { margin-left:auto; background:#B6862C; color:#111; padding:8px 14px; border-radius:8px; text-decoration:none; font-weight:700; flex:none; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIU Lost &amp; Found</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
 </head>
+
 <body>
-<header>FIU Lost &amp; Found</header>
-<main id="list"><p>Loading…</p></main>
-<script>
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-fetch('/api/items').then(r => r.json()).then(items => {
-  document.getElementById('list').innerHTML = items.length ? items.map(i => `
-    <div class="item">
-      ${i.photo_path ? `<img src="${esc(i.photo_path)}" alt="">` : ''}
-      <div><h2>${esc(i.title)}</h2><p>${esc(i.description)}</p></div>
-      <a href="/claim.html?id=${encodeURIComponent(i.id)}">Claim</a>
-    </div>`).join('') : '<p>No items posted yet.</p>';
-}).catch(() => { document.getElementById('list').innerHTML = '<p>Could not load items.</p>'; });
-</script>
+  <!-- ACCESSIBILITY -->
+  <a class="skip-link" href="#browse">Skip to items</a>
+
+  <!-- NAVIGATION -->
+  <header class="site-header">
+    <div class="container navigation">
+      <a class="brand" href="/" aria-label="FIU Lost and Found home">
+        <span class="brand-mark">FIU</span>
+        <span>
+          Lost &amp; Found
+          <span class="brand-caption">A Panther Community Project</span>
+        </span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <a class="nav-link" href="#browse">Browse items</a>
+        <a class="post-button" href="/post.html">Post an item</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-content">
+      <p class="eyebrow">FIU PANTHER COMMUNITY</p>
+      <h1>Lost something? Let's find it.</h1>
+      <p class="hero-description">
+        Browse items found around campus, or help another Panther
+        by posting something you've found.
+      </p>
+      <a class="button gold-button" href="/post.html">Post a found item</a>
+    </div>
+  </section>
+
+  <!-- BROWSE AND SEARCH -->
+  <main id="browse" class="container browse-section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">FOUND ITEMS</p>
+        <h2>Browse found items</h2>
+        <p>Search for belongings reported by the FIU community.</p>
+      </div>
+      <span class="availability-label">Available to claim</span>
+    </div>
+
+    <form id="search-form" class="search-form" role="search">
+      <label for="search">Search items</label>
+
+      <div class="search-controls">
+        <input
+          id="search"
+          name="search"
+          type="search"
+          placeholder="Search backpacks, wallets, keys..."
+        >
+        <button id="clear-search" class="clear-button" type="button" hidden>
+          Clear
+        </button>
+        <button class="button navy-button" type="submit">Search</button>
+      </div>
+
+      <p>Search by item name or description.</p>
+    </form>
+
+    <!-- RESULTS -->
+    <section id="results" aria-live="polite">
+      <p id="results-summary" class="results-summary">
+        Loading found items...
+      </p>
+
+      <div id="item-grid" class="item-grid"></div>
+
+      <div id="state-panel" class="state-panel" role="status">
+        <p id="state-message">Loading found items...</p>
+        <button id="retry" class="button navy-button" type="button" hidden>
+          Try again
+        </button>
+      </div>
+    </section>
+
+    <!-- CLAIM GUIDANCE -->
+    <aside class="claim-note">
+      <span class="note-symbol" aria-hidden="true">?</span>
+      <div>
+        <h2>Recognize something you lost?</h2>
+        <p>
+          Select "Claim this item" and answer the verification question
+          to confirm ownership.
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <strong>FIU Lost &amp; Found</strong>
+      <p>A student project for the FIU community.</p>
+    </div>
+  </footer>
 </body>
 </html>

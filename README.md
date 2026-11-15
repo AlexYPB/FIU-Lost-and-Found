@@ -58,12 +58,10 @@ API-backed listing/search in `public/app.js`. Static frontend files go in `publi
 - Loading, empty, no-match, and failure states, with retry and clear-search actions.
 - Claim links use `/claim.html?id=ITEM_ID`; returning to the homepage refreshes availability.
 - User text is rendered with `textContent`; photos are limited to local upload paths.
-- Eduardo's posting page is not included yet. The disabled “Post an item” action is an integration
-  point in `public/index.html`; replace it with the actual page link when his work arrives.
+- Eduardo's posting form at `/post.html` submits to the existing API, including optional photos.
+  The homepage links directly to it.
 
-Additional dependency-free homepage checks: `node --test frontend.test.js`.
-These check rendering/search/state behavior using a small DOM test double; they do not replace
-visual browser checks. Run `npm test` for Christian's existing API/database/claim tests.
+Run `npm test` for Christian's existing API/database/claim tests.
 
 Manual browser review: at desktop and mobile widths, check the seeded cards and photo fallbacks,
 search for “backpack”, clear the search, follow a Claim link, and return after claiming an item.

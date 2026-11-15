@@ -93,7 +93,15 @@ async function submit(e) {
   msg.textContent = data.error + (data.attemptsLeft > 0 ? ` (${data.attemptsLeft} attempt${data.attemptsLeft === 1 ? '' : 's'} left)` : '');
   btn.disabled = data.attemptsLeft === 0 || res.status === 409;
 }
-load();
+load().catch(() => {
+  card.replaceChildren();
+  const message = document.createElement('p');
+  message.textContent = 'Unable to load this item. Please try again.';
+  const retry = document.createElement('button');
+  retry.textContent = 'Try again';
+  retry.addEventListener('click', () => location.reload());
+  card.append(message, retry);
+});
 </script>
 </body>
 </html>

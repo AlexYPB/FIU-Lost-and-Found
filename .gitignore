@@ -1,3 +1,4 @@
 node_modules/
 uploads/
 lostfound.db*
+.DS_Store

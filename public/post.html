@@ -21,15 +21,16 @@
     </nav>
   </div>
 </header>
-  <main class="container">
+  <main class="container post-page">
     <h1>Post a found item</h1>
-    <form id = "post-form">
+    <p>Help a Panther recover their belongings. Required fields must be completed.</p>
+    <form id="post-form" class="post-form">
         <label for = "title">Item title</label>
         <input id = "title" name = "title" type = "text" maxlength = "100" required>
 
         <div>
         <label for="description">Description</label>
-        <textarea id = "description" name = "description" rows = "4" type = "text" maxlength = "500" required></textarea>
+        <textarea id = "description" name = "description" rows = "4" maxlength = "1000" required></textarea>
 </div>
 
     <div>
@@ -39,7 +40,7 @@
 
     <div>
         <label for = "verification_question">Verification question</label>
-        <input id = "verification_question" name = "verification_question" type = "text" placeholder = "So we know it's really you" maxlength = "200" required>
+        <input id = "verification_question" name = "verification_question" type = "text" placeholder = "Example: What keychain is attached?" maxlength = "200" required>
 </div>
 
     <div>
@@ -52,12 +53,15 @@
 <input id="poster_email" name="poster_email" type="email" maxlength="200" required autocomplete="email">
 </div>
 
+<p class="field-help">Your answer stays secret. Your email is shared only after a successful ownership claim.</p>
 <div>
   <label for="photo">Photo (optional)</label>
   <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/gif,image/webp">
 </div>
 
         <button id = "submit-button" type = "submit">Post item</button>
+        <p id="form-message" class="form-message" role="status" hidden></p>
         </form>  </main>
+<footer class="site-footer"><div class="container footer-content"><strong>FIU Lost &amp; Found</strong><p>A student capstone project. Not an official FIU service.</p></div></footer>
 </body>
 </html>
