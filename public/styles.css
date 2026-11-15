@@ -90,3 +90,20 @@ h2 { color: var(--navy); font-size: 28px; line-height: 1.25; letter-spacing: -.6
   .claim-note { align-items: flex-start; padding: 20px; }
   .footer-content { align-items: flex-start; flex-direction: column; gap: 5px; }
 }
+
+/* POSTING FORM */
+.post-button[href] { cursor: pointer; text-decoration: none; }
+.post-page { max-width: 720px; padding-block: 36px 48px; }
+.post-page h1 { font-size: clamp(30px, 5vw, 40px); color: var(--navy); }
+.post-page > p, .field-help { color: var(--muted); font-size: 14px; }
+.post-form { background: white; padding: 24px; border: 1px solid var(--line); border-radius: 10px; }
+.post-form label { display: block; font-weight: 600; margin: 18px 0 6px; }
+.post-form > label:first-child { margin-top: 0; }
+.post-form input, .post-form textarea { display: block; width: 100%; min-width: 0; padding: 10px 12px; font: inherit; color: var(--text); border: 1px solid #aab4c2; border-radius: 6px; background: white; }
+.post-form textarea { resize: vertical; }
+.post-form button[type="submit"] { margin-top: 24px; width: 100%; min-height: 46px; background: var(--gold); color: var(--navy); border: 0; border-radius: 6px; font-weight: 700; }
+.post-form button:disabled { opacity: .65; cursor: wait; }
+.form-message { padding: 14px; border-radius: 6px; overflow-wrap: anywhere; }
+.form-message.success { background: #e6f4ea; color: #215b32; }
+.form-message.error { background: #fce8e6; color: #92251f; }
+@media (max-width: 600px) { .post-form { padding: 18px; } }
